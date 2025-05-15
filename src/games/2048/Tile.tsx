@@ -1,5 +1,5 @@
 import React from 'react';
-imort {Tile as TileType} from '.../.../types';
+import {Tile as TileType} from '.../.../types';
 
 interface TileProps {
     tile: TileType;

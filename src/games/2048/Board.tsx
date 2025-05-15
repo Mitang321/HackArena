@@ -1,22 +1,21 @@
 import React from 'react';
-import {GridCell} from '.../.../types';
-import  Tile  from './Tile';
+import { GridCell } from '../../types';
+import Tile from './Tile';
 
 interface BoardProps {
-    grid: GridCell[][];
+  grid: GridCell[][];
 }
 
-const Board: React,Fc<BoardProps> = ({grid}) => {       
-    return (
-        <div
-        className="bg-gray-800 rounded-lg p-2 select-none"
-        style={{
-            width: 'min(100%, 350px)',
-            aspectRatio: '1/1',
-
-        }}
-        >
-            <div className="relative w-full h-full grid grid-cols-4 gap-2">
+const Board: React.FC<BoardProps> = ({ grid }) => {
+  return (
+    <div 
+      className="bg-gray-800 rounded-lg p-2 select-none"
+      style={{ 
+        width: 'min(100%, 350px)',
+        aspectRatio: '1/1'
+      }}
+    >
+      <div className="relative w-full h-full grid grid-cols-4 gap-2">
         {/* Background cells */}
         {grid.flat().map((cell, index) => (
           <div 

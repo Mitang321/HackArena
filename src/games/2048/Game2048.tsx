@@ -1,50 +1,48 @@
-import React, { useEffect, useState } from 'react';
-import {Board from './Board';}
-import {useGame2048} from './useGame2048';
-import {ArrowDown, ArrowLeft, ArrowRight, ArrowUp, RefreshCw} from 'lucide-react';
+import React, { useEffect } from 'react';
+import Board from './Board';
+import { useGame2048 } from './useGame2048';
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, RefreshCw } from 'lucide-react';
 
 const Game2048: React.FC = () => {
-    const{
-        grid,
-        score,
-        bestScore,
-        isgameOver,
-        isGameWon,
-        move,
-        restart
-        = useGame2048();
-    }
+  const { 
+    grid, 
+    score, 
+    bestScore, 
+    isGameOver, 
+    isGameWon, 
+    move, 
+    restart 
+  } = useGame2048();
 
-    ude Effect(() => {  
-        const handlekeydown = (event: keybosrdevent) => {
-        if (isGameOver || isGameWon) return;
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (isGameOver || isGameWon) return;
 
-        switch (event.key) {
-            case 'ArrowUp':
-                move('up');
-                event.preventDefault();
-                break;
-            case 'ArrowDown':    
-            move('down');
-                event.preventDefault();
-                break;
-            case 'ArrowLeft':
-                move('left');
-                event.preventDefault();
-                break;
-            case 'ArrowRight':
-                move('right');
-                event.preventDefault();
-                break;
+      switch (event.key) {
+        case 'ArrowUp':
+          move('up');
+          event.preventDefault();
+          break;
+        case 'ArrowDown':
+          move('down');
+          event.preventDefault();
+          break;
+        case 'ArrowLeft':
+          move('left');
+          event.preventDefault();
+          break;
+        case 'ArrowRight':
+          move('right');
+          event.preventDefault();
+          break;
+      }
+    };
 
-        }
-        };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [move, isGameOver, isGameWon]);
 
-        window.addEventListener('keydown', handlekeydown);
-        return () => window.removeEventListener('keydown', handlekeydown);
-    } , [move, isGameOver, isGameWon]);
-
-    return (
+  return (
     <div className="flex flex-col items-center animate-fade-in">
       <div className="flex justify-between w-full mb-4">
         <div className="flex-1">
@@ -73,10 +71,9 @@ const Game2048: React.FC = () => {
         </button>
       </div>
 
-      <board grid={grid} /> 
+      <Board grid={grid} />
 
-
-
+      {/* Mobile controls */}
       <div className="mt-8 grid grid-cols-3 gap-2 w-full max-w-[280px] md:hidden">
         <div className="col-span-1"></div>
         <button 
