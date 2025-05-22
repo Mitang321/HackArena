@@ -6,6 +6,7 @@ const WIN_VALUE = 2048;
 
 let tileIdCounter = 0;
 
+
 const initializeGrid = (): GridCell[][] => {
   const grid: GridCell[][] = [];
   for (let row = 0; row < GRID_SIZE; row++) {
@@ -21,9 +22,11 @@ const initializeGrid = (): GridCell[][] => {
   return grid;
 };
 
+
 const hasAvailableCells = (grid: GridCell[][]): boolean => {
   return grid.some(row => row.some(cell => !cell.tile));
 };
+
 
 const getRandomAvailableCell = (grid: GridCell[][]): TilePosition | null => {
   const availableCells: TilePosition[] = [];
@@ -42,6 +45,7 @@ const getRandomAvailableCell = (grid: GridCell[][]): TilePosition | null => {
   return availableCells[randomIndex];
 };
 
+
 const addRandomTile = (grid: GridCell[][]): GridCell[][] => {
   const cell = getRandomAvailableCell(grid);
   if (!cell) return grid;
@@ -49,6 +53,7 @@ const addRandomTile = (grid: GridCell[][]): GridCell[][] => {
   const { row, col } = cell;
   const newGrid = [...grid];
   
+
   const value = Math.random() < 0.9 ? 2 : 4;
   
   newGrid[row][col] = {
@@ -64,13 +69,17 @@ const addRandomTile = (grid: GridCell[][]): GridCell[][] => {
   return newGrid;
 };
 
+
 const hasAvailableMoves = (grid: GridCell[][]): boolean => {
+
   if (hasAvailableCells(grid)) return true;
+
 
   for (let row = 0; row < GRID_SIZE; row++) {
     for (let col = 0; col < GRID_SIZE; col++) {
       const tile = grid[row][col].tile;
       if (!tile) continue;
+
 
       const directions = [
         { row: row - 1, col }, // top
@@ -186,10 +195,13 @@ export const useGame2048 = () => {
     setIsGameWon(false);
   }, []);
 
+
   const move = useCallback((direction: Direction) => {
     if (isGameOver || isGameWon) return;
 
-   
+
+
+
     const traversals = {
       row: Array.from({ length: GRID_SIZE }, (_, i) => 
         direction === 'down' ? GRID_SIZE - 1 - i : i
@@ -198,6 +210,7 @@ export const useGame2048 = () => {
         direction === 'right' ? GRID_SIZE - 1 - i : i
       ),
     };
+
 
     if (direction === 'right' || direction === 'down') {
       traversals.row.reverse();
@@ -222,6 +235,7 @@ export const useGame2048 = () => {
              pos.col >= 0 && pos.col < GRID_SIZE;
     };
 
+
     const newGrid = grid.map(row => 
       row.map(cell => ({
         ...cell,
@@ -229,10 +243,13 @@ export const useGame2048 = () => {
       }))
     );
 
+
     let moved = false;
     let newScore = score;
 
+
     const processedPositions = new Set<string>();
+
 
     const rowOrder = direction === 'up' ? [...Array(GRID_SIZE).keys()] : 
                     [...Array(GRID_SIZE).keys()].reverse();
@@ -246,31 +263,39 @@ export const useGame2048 = () => {
         
         if (!cell.tile) continue;
 
+
         let currentPos = { ...pos };
         let nextPos = getNextPosition(currentPos);
         
+
         while (isValidPosition(nextPos)) {
           const nextCell = newGrid[nextPos.row][nextPos.col];
           
           if (!nextCell.tile) {
+
             currentPos = nextPos;
             nextPos = getNextPosition(currentPos);
           } else if (nextCell.tile.value === cell.tile.value && 
                      !processedPositions.has(`${nextPos.row},${nextPos.col}`)) {
+
             currentPos = nextPos;
             break;
           } else {
+
             break;
           }
         }
 
+
         if (currentPos.row !== pos.row || currentPos.col !== pos.col) {
           moved = true;
           
+
           if (newGrid[currentPos.row][currentPos.col].tile) {
             const targetTile = newGrid[currentPos.row][currentPos.col].tile!;
             const doubledValue = targetTile.value * 2;
             
+
             newGrid[currentPos.row][currentPos.col].tile = {
               id: tileIdCounter++,
               value: doubledValue,
@@ -278,27 +303,35 @@ export const useGame2048 = () => {
               mergedFrom: [cell.tile, targetTile],
             };
             
+
             newGrid[pos.row][pos.col].tile = null;
             
+
             newScore += doubledValue;
             
+
             processedPositions.add(`${currentPos.row},${currentPos.col}`);
           } else {
+
             newGrid[currentPos.row][currentPos.col].tile = {
               ...cell.tile,
               position: currentPos,
             };
             
+
             newGrid[pos.row][pos.col].tile = null;
           }
         }
       }
     }
 
+
     if (!moved) return;
+
 
     const gridWithNewTile = addRandomTile(newGrid);
     
+
     setGrid(gridWithNewTile);
     setScore(newScore);
   }, [grid, score, isGameOver, isGameWon]);
